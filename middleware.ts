@@ -8,9 +8,13 @@ const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/forum(.*)',
 ]);
- 
+
+const isPublicRoute = (path: string) => path === '/api/webhooks/(.*)';
+
 export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+  if (isProtectedRoute(req) && !isPublicRoute(req.url)) {
+    auth().protect();
+  }
 });
  
 export const config = {
